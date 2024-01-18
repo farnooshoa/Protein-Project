@@ -1,0 +1,41 @@
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protein Structure Prediction</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Protein Structure Prediction</h1>
+
+        <!-- Search Bar -->
+        <div class="section">
+            <h2>Search Protein</h2>
+            <form id="search-form">
+                <input type="text" id="protein-search" placeholder="Enter protein sequence">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- Display the protein sequence -->
+        <div class="section">
+            <h2>Protein Sequence</h2>
+            <pre id="protein-sequence"></pre>
+        </div>
+
+        <!-- Display the predicted structure information -->
+        <div class="section">
+            <h2>Predicted Structure Information</h2>
+            <p id="structure-info">Mean Squared Error: <span id="mse"></span></p>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
+
