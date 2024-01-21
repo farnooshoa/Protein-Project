@@ -94,15 +94,19 @@ def train_linear_regression_model(features, labels):
     model = LinearRegression()
     model.fit(features, labels)
     return model
-# Assuming you have labels/targets for your dataset
-# If not, you'll need to collect or generate them based on your specific task
-
-# Assuming labels is a 1D numpy array of target values
-# If not, you'll need to replace this with your actual target data
 
 X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 # Train the linear regression model
 model = train_linear_regression_model(X_train, y_train)
+# Predict the targets for the test set
+y_pred = model.predict(X_test)
+
+# Calculate Mean Squared Error (MSE)
+mse = mean_squared_error(y_test, y_pred)
+
+print(f"Mean Squared Error: {mse}")
+# Assuming you have a trained model and X_test, y_test from previous steps
+
 # Predict the targets for the test set
 y_pred = model.predict(X_test)
 
