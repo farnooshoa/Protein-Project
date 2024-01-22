@@ -1,5 +1,33 @@
 from Bio import SeqIO
 import os
+from flask import Flask, render_template, request
+
+# Your existing code for data processing and model training
+
+# Create Flask app
+app = Flask(__name__)
+
+# Define routes
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    sequence = request.form['sequence']
+
+    # Add code to preprocess the sequence and make predictions using your model
+    # prediction = model.predict(preprocess_sequence(sequence))
+
+    # For demonstration purposes, assuming a placeholder prediction
+    prediction = "Placeholder Prediction"
+
+    return render_template('index.html', prediction=prediction)
+
+# Run the app
+if __name__ == '__main__':
+    app.run(debug=True)
+
 # Define paths to your data files
 fasta_file_path = "data/hemoglobin.fasta"
 
