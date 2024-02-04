@@ -1,35 +1,16 @@
 from Bio import SeqIO
 import os
 from flask import Flask, render_template, request
-
+import requests  # Import the requests library for HTTP requests
 # Your existing code for data processing and model training
 
 # Create Flask app
 app = Flask(__name__)
 
-# Define routes
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    sequence = request.form['sequence']
-
-    # Add code to preprocess the sequence and make predictions using your model
-    # prediction = model.predict(preprocess_sequence(sequence))
-
-    # For demonstration purposes, assuming a placeholder prediction
-    prediction = "Placeholder Prediction"
-
-    return render_template('index.html', prediction=prediction)
-
-# Run the app
-if __name__ == '__main__':
-    app.run(debug=True)
-
 # Define paths to your data files
 fasta_file_path = "data/hemoglobin.fasta"
+uniprot_ids = ["P68871", "Q9YH37", "O00203"]  # Replace with your list of UniProt IDs
+
 
 def load_protein_sequences(fasta_file):
     """
@@ -43,6 +24,27 @@ def load_protein_sequences(fasta_file):
     """
     sequences = list(SeqIO.parse(fasta_file, "fasta"))
     return sequences
+def download_uniprot_data(uniprot_ids):
+    """
+    Download protein sequences from UniProt.
+    
+    Args:
+        uniprot_ids (list of str): List of UniProt IDs.
+        
+    Returns:
+        list of Bio.SeqRecord.SeqRecord: List of SeqRecord objects containing protein sequences.
+    """
+    sequences = []
+    for uniprot_id in uniprot_ids:
+        url = f'https://www.uniprot.org/uniprot/{uniprot_id}.fasta'
+        response = requests.get(url)
+        if response.status_code == 200:
+            sequence = SeqIO.read(io.StringIO(response.text), 'fasta')
+            sequences.append(sequence)
+        else:
+            print(f"Failed to download data for UniProt ID {uniprot_id}. Status code: {response.status_code}")
+    return sequences
+
 def preprocess_sequences(sequences):
     """
     Preprocess protein sequences.
@@ -63,6 +65,17 @@ preprocessed_sequences = preprocess_sequences(protein_sequences)
 
 # Example: Print the first preprocessed sequence
 print(preprocessed_sequences[0])
+# Download UniProt data
+uniprot_sequences = download_uniprot_data(uniprot_ids)
+
+# Load protein sequences from a FASTA file
+fasta_sequences = load_protein_sequences(fasta_file_path)
+
+# Combine UniProt and FASTA sequences
+all_sequences = uniprot_sequences + fasta_sequences
+
+# Preprocess sequences
+preprocessed_sequences = preprocess_sequences(all_sequences)
 
 import numpy as np
 
@@ -142,3 +155,6 @@ y_pred = model.predict(X_test)
 mse = mean_squared_error(y_test, y_pred)
 
 print(f"Mean Squared Error: {mse}")
+# Run the app
+if __name__ == '__main__':
+    app.run(debug=True)
